@@ -2,7 +2,7 @@ import random
 
 import colorama
 
-import ruhelper as h
+import rulang as h
 
 
 class Name:
@@ -101,31 +101,31 @@ class NPC(Humanoid):
 
 class Tavern(Building):
     def __init__(self, in_town: Town):
-        self.town = in_town
-        super().__init__(age=random.randint(0, self.town.age))
+        self.__town = in_town
+        super().__init__(age=random.randint(0, self.__town.age), name=Name().name)
         self.material = random.choice(h.materials)
         self.creator = Humanoid() if in_town.age - self.age > 40 and random.randint(0, 1) == 0 else in_town.creator
         self.barman = None
         self.barman_only_one = bool(random.randint(0, 1))
         self.visitors = list()
-        self.monthly_additions = (self.town.peoples // 100 + 1) * random.randint(1, 10)
+        self.monthly_additions = (self.__town.peoples // 100 + 1) * random.randint(1, 10)
 
     def join(self):
         if not self.barman_only_one:
             self.barman = Humanoid()
-        for _ in range(random.randint(0, self.town.peoples // 100 + 1)):
+        for _ in range(random.randint(0, self.__town.peoples // 100 + 1)):
             self.visitors.append(Humanoid())
 
 
 class ReligionBuilding(Building):
     def __init__(self, in_town: Town):
-        self.town = in_town
-        super().__init__(age=random.randint(0, self.town.age))
+        self.__town = in_town
+        super().__init__(age=random.randint(0, self.__town.age))
         self.material = random.choice(h.materials)
         self.creator = Humanoid() if in_town.age - self.age > 40 and random.randint(0, 1) == 0 else in_town.creator
         self.main_prienst = Humanoid()
         self.visitors = list()
 
     def join(self):
-        for _ in range(random.randint(0, self.town.peoples // 100 + 1)):
+        for _ in range(random.randint(0, self.__town.peoples // 100 + 1)):
             self.visitors.append(Humanoid())
