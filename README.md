@@ -10,5 +10,5 @@
         <th>Generate everything for your D&D game</th>
         <th>Free!</th>
     </tr>
-</table>
-<h4>p. s. Just playing with .md file, don't worry</h4>
+</table><br>
+<h4>P. S. Just playing with .md file, don't worry</h4>
