@@ -1,3 +1,4 @@
+from contextlib import suppress
 import filer
 from helper import *
 
@@ -7,10 +8,14 @@ def incorrect_input():
 
 
 def info():
-    print('Выберете генератор:\n1) Генератор персонажей\n2) Генератор названий\n3) Генератор городов')
-    print(colorama.Fore.RED + 'Введите quit, чтобы выйти\n' +
-          colorama.Fore.YELLOW + 'Введите list, чтобы показать это сообщение ещё раз\n' +
-          colorama.Fore.GREEN + 'Введите info, чтобы увидеть полную информацию о предыдуем объекте')
+    colorate({"Выберете генератор:\n1) Генератор персонажей\n2) Генератор названий\n3) Генератор городов\n": None, 
+              "Введите quit, чтобы выйти\n": colorama.Fore.RED, 
+              "Введите list, чтобы показать это сообщение ещё раз\n": colorama.Fore.YELLOW,
+              "Введите info, чтобы увидеть полную информацию о предыдуем объекте": colorama.Fore.GREEN})
+    # print('Выберете генератор:\n1) Генератор персонажей\n2) Генератор названий\n3) Генератор городов')
+    # print(colorama.Fore.RED + 'Введите quit, чтобы выйти\n' +
+    #       colorama.Fore.YELLOW + 'Введите list, чтобы показать это сообщение ещё раз\n' +
+    #       colorama.Fore.GREEN + 'Введите info, чтобы увидеть полную информацию о предыдуем объекте')
 
 
 if __name__ == '__main__':
@@ -33,7 +38,7 @@ if __name__ == '__main__':
                 town = Town()
                 town.print_full_info()
                 last_function_called = town
-                print(colorama.Fore.YELLOW + 'Введите join, если ваши игроки решат войти в таверну или церковь')
+                colorate({"Введите join, если ваши игроки решат войти в таверну или церковь": colorama.Fore.YELLOW})
             elif n in ('q', 'quit', 'e', 'exit', 'й', 'йгше', 'у', 'учше'):
                 break
             elif n in ('list', 'l', 'spis', 's', 'дшые', 'д', 'ызшы', 'ы'):
@@ -41,7 +46,9 @@ if __name__ == '__main__':
             elif n in ('info', 'i', 'штащ', 'ш'):
                 filer.output_full_info(last_function_called, beutiful=True)
             elif n in ('join', 'j', 'ощшт', 'о'):
-                filer
+                print(type(last_function_called))
+                with suppress(AttributeError):
+                    last_function_called.join()
             else:
                 incorrect_input()
         except ValueError:

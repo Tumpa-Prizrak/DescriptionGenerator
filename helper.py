@@ -1,9 +1,27 @@
+from operator import le
 import random
 
 import colorama
+import requests
 
 import rulang as h
 
+def colorate(phraze: dict):
+    """{"phraze": "color"}"""
+    out = ""
+    for i in phraze.keys():
+        if phraze[i] is None:
+            out += i
+        else:
+            out += phraze[i] + i
+    print(out)
+
+class GeneratorUrl:
+    def __init__(self):
+        self.__url_name = "https://www.kassoon.com/dnd/name-generator/{}-{}-English"
+    
+    def generate_name(self, gender: str, race: str):
+        requests.get(self.__url_name.format(h.to_requests['gender'][gender], h.to_requests['race'][race]), timeout=1).content.decode().split("<br/>")[1]
 
 class Name:
     def __init__(self, length=4):
@@ -37,6 +55,9 @@ class Building(ABC):
         cls.type: str = None
         cls.material: str | list = None
         cls.creator: Humanoid = None
+    
+    def join(self):
+        self.visitors = random.randint(0, self.__town.peoples // 100 + 1)
 
 
 class Humanoid(ABC):
@@ -46,6 +67,10 @@ class Humanoid(ABC):
                          age=random.randint(16, 80))
         self.race = random.choice(h.races)
         self.surname = random.choice(h.surnames)
+        try:
+            self.name, self.surname = GeneratorUrl().generate_name(self.gender, self.race)
+        except requests.ConnectionError:
+            pass
         self.title = random.choice(h.female_titles if self.gender == "Женский" else h.male_titles) if titular else ""
         self.full_name = self.title + " " + self.name + " " + self.surname if titular else self.name + " " + self.surname  # FIXME:?
 
@@ -79,6 +104,31 @@ class Town(ABC):
         print(f"Население: {self.peoples}, из них дети: {self.kids}")
         print(f"Жилые здания: {self.living_buildings}, таверны: {len(self.taverns)}")
         print(f"Храмов, мечетей и других религиозных построек: {len(self.religion_bildings)}")
+    
+    def join(self):
+        while True:
+            colorate({"Религиозные здания:": colorama.Fore.YELLOW})
+            for i in range(len(self.religion_bildings)):
+                print(f"R{i}) {self.religion_bildings[i].type} {self.religion_bildings[i].name}")
+            colorate({"Таверны:": colorama.Fore.YELLOW})
+            for i in range(len(self.taverns)):
+                print(f"T{i}) {self.taverns[i].type} {self.taverns[i].name}")
+            c = input("Введите код здания: ").upper()
+            if c.startswith("R"):
+                #try:
+                self.religion_bildings[int(c[1:])].join()
+                break
+                #except IndexError:
+                #    colorate({"Неправильный ввод": colorama.Fore.RED})
+            elif c.startswith("T"):
+                try:
+                    self.taverns[int(c[1:])].join()
+                    break
+                except IndexError:
+                    colorate({"Неправильный ввод": colorama.Fore.RED})
+            else:
+                colorate({"Неправильный ввод": colorama.Fore.RED})
+            
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -107,14 +157,16 @@ class Tavern(Building):
         self.creator = Humanoid() if in_town.age - self.age > 40 and random.randint(0, 1) == 0 else in_town.creator
         self.barman = None
         self.barman_only_one = bool(random.randint(0, 1))
-        self.visitors = list()
+        if self.barman_only_one:
+            self.barman = Humanoid()
+        self.visitors = 0
         self.monthly_additions = (self.__town.peoples // 100 + 1) * random.randint(1, 10)
 
     def join(self):
+        super().join()
         if not self.barman_only_one:
             self.barman = Humanoid()
-        for _ in range(random.randint(0, self.__town.peoples // 100 + 1)):
-            self.visitors.append(Humanoid())
+        print(f"Вы входите в таверну {self.name} и видите {len(self.visitors)} человек и бармена {self.barman}")
 
 
 class ReligionBuilding(Building):
@@ -125,7 +177,7 @@ class ReligionBuilding(Building):
         self.creator = Humanoid() if in_town.age - self.age > 40 and random.randint(0, 1) == 0 else in_town.creator
         self.main_prienst = Humanoid()
         self.visitors = list()
-
+    
     def join(self):
-        for _ in range(random.randint(0, self.__town.peoples // 100 + 1)):
-            self.visitors.append(Humanoid())
+        super().join()
+        print(f"Вы входите в {self.name} и видите {len(self.visitors)} человек" + "и видите епископа" if random.randint(0, 1) == 1 else ", но не видите епископа")

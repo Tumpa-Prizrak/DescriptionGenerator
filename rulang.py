@@ -7,12 +7,44 @@ strange_names = ['Са', 'Им', 'Де', 'Хи', 'За', 'Ре', 'Ив', 'Же',
 male_titles = ['Граф', 'Король', 'Принц']
 female_titles = ['Графиня', 'Королева', 'Принцесса']
 materials = ['Дерево', 'Кирпич']
-ru_fields = {"Class": "Класс", 
-            "age": "Возраст", 
-            "full_name": "Полное имя", 
-            "gender": "Пол", 
-            "level": "Уровень", 
-            "name": "Имя", 
-            "race": "Расса", 
-            "surname": "Фамилия", 
-            "title": "Титул"}
+ru_fields = {
+    "Class": "Класс", 
+    "age": "Возраст", 
+    "full_name": "Полное имя", 
+    "gender": "Пол", 
+    "level": "Уровень", 
+    "name": "Имя", 
+    "race": "Расса", 
+    "surname": "Фамилия", 
+    "title": "Титул",
+    "material": "Материал",
+    "monthly_additions": "Месячная прибыль",
+    "type": "Тип",
+    "visitors": "Посетители",
+    "creator": "Создатель",
+    "barman": "Бармен",
+    "barman_only_one": "Бармен единственный?",
+    "main_prienst": "Епископ",
+    "taverns": "Таверны",
+    "religion_bildings": "Религиозные здания",
+    "peoples": "Население",
+    "living_buildings": "Жилые здания",
+    "kids": "Дети"
+}
+to_requests = {
+    "gender": {
+        "Мужской": "Male",
+        "Женский": "Female"
+    },
+    "race": {
+        'Гном': "Gnome", 
+        'Дварф': "Dwarf", 
+        'Драконорождённый': "Dragonborn", 
+        'Полуорк': "Half-orc",
+        'Полурослик': "Halfing", 
+        'Полуэльф': "Half-elf", 
+        'Тифлинг': "Tiefling", 
+        'Человек': "Human", 
+        'Эльф': "Elf"
+    }
+}
